@@ -25,12 +25,13 @@ const EMPTY_DISCOUNT = {
 export function run(input) {
   const targets = input.cart.lines
   // Only include cart lines with a quantity of two or more
-  .filter(line => line.quantity >= 2)
+  .filter(line => line.quantity >= 2 && line.merchandise.__typename === "ProductVariant")
   .map(line => {
+    const merchandise = /** @type {ProductVariant} */ (line.merchandise);
     return /** @type {Target} */ ({
       // Use the cart line ID to create a discount target
-      cartLine: {
-        id: line.id
+      productVariant: {
+        id: merchandise.id
       }
     });
   });
