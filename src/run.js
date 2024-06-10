@@ -52,7 +52,7 @@ export function run(input) {
         // Define a percentage-based discount
         value: {
           percentage: {
-            value: "10.0"
+            value: "20.0"
           }
         }
       }
