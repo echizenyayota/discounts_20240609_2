@@ -26,5 +26,10 @@
   },
   "devDependencies": {
     "vitest": "^0.29.8"
+  },
+  "dependencies": {
+    "@shopify/app-bridge-react": "^4.1.3",
+    "@shopify/discount-app-components": "^3.0.0",
+    "@shopify/react-form": "^2.6.0"
   }
 }

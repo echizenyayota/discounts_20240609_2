@@ -1,0 +1,30 @@
+import * as predicates from '@shopify/predicates';
+import { validator } from './validator.esnext';
+
+function lengthMoreThan(length, error) {
+  return validator(predicates.lengthMoreThan(length))(error);
+}
+function lengthLessThan(length, error) {
+  return validator(predicates.lengthLessThan(length))(error);
+}
+function notEmpty(error) {
+  return validator(predicates.notEmpty, {
+    skipOnEmpty: false
+  })(error);
+}
+function notEmptyString(error) {
+  return validator(predicates.notEmptyString, {
+    skipOnEmpty: false
+  })(error);
+}
+function positiveIntegerString(error) {
+  return validator(predicates.isPositiveIntegerString)(error);
+}
+function positiveNumericString(error) {
+  return validator(predicates.isPositiveNumericString)(error);
+}
+function numericString(error) {
+  return validator(predicates.isNumericString)(error);
+}
+
+export { lengthLessThan, lengthMoreThan, notEmpty, notEmptyString, numericString, positiveIntegerString, positiveNumericString };

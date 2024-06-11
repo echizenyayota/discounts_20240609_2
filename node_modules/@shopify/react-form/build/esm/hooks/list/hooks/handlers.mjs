@@ -1,0 +1,74 @@
+import { useMemo } from 'react';
+import { mapObject, isChangeEvent } from '../../../utilities.mjs';
+import { updateAction, resetAction, newDefaultAction, updateErrorAction } from './reducer.mjs';
+import { runValidation } from '../utils/utils.mjs';
+
+function useHandlers(state, dispatch, validationConfigs) {
+  return useMemo(() => {
+    return state.list.map((item, index) => {
+      return mapObject(item, (field, key) => {
+        const target = {
+          index,
+          key
+        };
+        function validate(value = field.value) {
+          const validates = validationConfigs[key];
+          if (validates == null) {
+            return;
+          }
+          const siblings = state.list.filter(listItem => listItem !== item);
+          return runValidation(error => dispatch(updateErrorAction({
+            target,
+            error: error || ''
+          })), {
+            value,
+            siblings,
+            listItem: item
+          }, validates);
+        }
+        return {
+          onChange(value) {
+            const normalizedValue = isChangeEvent(value) ? value.target.value : value;
+            dispatch(updateAction({
+              target,
+              value: normalizedValue
+            }));
+            if (field.error) {
+              validate(normalizedValue);
+            }
+          },
+          reset() {
+            dispatch(resetAction({
+              target
+            }));
+          },
+          newDefaultValue(value) {
+            dispatch(newDefaultAction({
+              target,
+              value
+            }));
+          },
+          runValidation: validate,
+          onBlur() {
+            const {
+              touched,
+              error
+            } = field;
+            if (touched === false && error == null) {
+              return;
+            }
+            validate();
+          },
+          setError(error) {
+            dispatch(updateErrorAction({
+              target,
+              error
+            }));
+          }
+        };
+      });
+    });
+  }, [dispatch, state.list, validationConfigs]);
+}
+
+export { useHandlers };
