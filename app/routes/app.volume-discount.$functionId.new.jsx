@@ -196,7 +196,11 @@ export default function VolumeNew() {
       appliesOncePerCustomer: useField(false),
       startDate: useField(todaysDate),
       endDate: useField(null),
-      configuration: {},
+      configuration: {
+        // Add quantity and percentage configuration to form data
+        quantity: useField('1'),
+        percentage: useField('0'),
+      },
     },
     onSubmit: async (form) => {
       const discount = {
@@ -208,7 +212,10 @@ export default function VolumeNew() {
         appliesOncePerCustomer: form.appliesOncePerCustomer,
         startsAt: form.startDate,
         endsAt: form.endDate,
-        configuration: {},
+        configuration: {
+          quantity: parseInt(form.configuration.quantity),
+          percentage: parseFloat(form.configuration.percentage)
+        },
       };
 
       submitForm({ discount: JSON.stringify(discount) }, { method: "post" });
@@ -261,6 +268,25 @@ export default function VolumeNew() {
                 discountCode={discountCode}
                 discountMethod={discountMethod}
               />
+              { /* Collect data for the configuration metafield. */}
+              <Card>
+                <BlockStack gap="3">
+                  <Text variant="headingMd" as="h2">
+                    Volume
+                  </Text>
+                  <TextField 
+                    label="Minimum quantity"
+                    autoComplete="on"
+                    {...configuration.quantity}
+                  />
+                  <TextField
+                    label="Discount percentage"
+                    autoComplete="on"
+                    {...configuration.percentage}
+                    suffix="%" 
+                  />
+                </BlockStack>
+              </Card>
               {discountMethod.value === DiscountMethod.Code && (
                 <UsageLimitsCard
                   totalUsageLimit={usageLimit}
